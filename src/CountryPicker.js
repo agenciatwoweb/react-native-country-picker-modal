@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  ListView,
+  SectionList,
   ScrollView,
   Platform,
 
@@ -49,7 +49,6 @@ const setCountries = flagType => {
   }
 }
 
-const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
 setCountries()
 
@@ -70,6 +69,7 @@ export default class CountryPicker extends Component {
     styles: PropTypes.object,
     filterPlaceholder: PropTypes.string,
     autoFocusFilter: PropTypes.bool,
+    recommendedCountryList: PropTypes.array,
     // to provide a functionality to disable/enable the onPress of Country Picker.
     disabled: PropTypes.bool,
     filterPlaceholderTextColor: PropTypes.string,
@@ -82,6 +82,9 @@ export default class CountryPicker extends Component {
     showCallingCode: PropTypes.bool,
     filterOptions: PropTypes.object,
     backgroundModalColor: PropTypes.string,
+    childrenWithFlag: PropTypes.node,
+    recommendedSectionTitle: PropTypes.string,
+    restOfTheWorldTitle: PropTypes.string,
   }
 
   static defaultProps = {
@@ -93,6 +96,8 @@ export default class CountryPicker extends Component {
     transparent: true,
     animationType: 'none',
     backgroundModalColor: 'white',
+    recommendedSectionTitle: 'ME DE UM TITULO',
+    restOfTheWorldTitle: 'ME DE UM TITUTLO TBEM',
   }
 
   static renderEmojiFlag(cca2, emojiStyle) {
@@ -103,6 +108,14 @@ export default class CountryPicker extends Component {
         ) : null}
       </Text>
     )
+  }
+
+  renderSectionHeader = (item) =>{
+    return(
+      <View style={{marginBottom: 10, backgroundColor: 'white', height: 60, alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={{textAlign: 'center',fontSize: 26, fontWeight:'bold', color: '#008AFF' }}>{item}</Text>
+      </View>
+    );
   }
 
   static renderImageFlag(cca2, imageStyle) {
@@ -130,13 +143,15 @@ export default class CountryPicker extends Component {
 
     setCountries(props.flagType)
     let countryList = [...props.countryList]
-    const excludeCountries = [...props.excludeCountries]
+    let recommendedCountries = []
+    const recommendedCountryList = [...props.recommendedCountryList]
 
-    excludeCountries.forEach(excludeCountry => {
-      const index = countryList.indexOf(excludeCountry)
+    recommendedCountryList.forEach(recommendedCountry => {
+      const index = countryList.indexOf(recommendedCountry)
 
       if (index !== -1) {
-        countryList.splice(index, 1)
+        recommendedCountries.push(countryList[index]);
+        countryList.splice(index, 1);
       }
     })
 
@@ -147,8 +162,9 @@ export default class CountryPicker extends Component {
 
     this.state = {
       modalVisible: false,
+      recommendedCountries,
+      countryList,
       cca2List: countryList,
-      dataSource: ds.cloneWithRows(countryList),
       filter: '',
       letters: this.getLetters(countryList)
     }
@@ -191,7 +207,6 @@ export default class CountryPicker extends Component {
     if (nextProps.countryList !== this.props.countryList) {
       this.setState({
         cca2List: nextProps.countryList,
-        dataSource: ds.cloneWithRows(nextProps.countryList)
       })
     }
   }
@@ -200,7 +215,6 @@ export default class CountryPicker extends Component {
     this.setState({
       modalVisible: false,
       filter: '',
-      dataSource: ds.cloneWithRows(this.state.cca2List)
     })
 
     this.props.onChange({
@@ -215,7 +229,6 @@ export default class CountryPicker extends Component {
     this.setState({
       modalVisible: false,
       filter: '',
-      dataSource: ds.cloneWithRows(this.state.cca2List)
     })
     if (this.props.onClose) {
       this.props.onClose()
@@ -284,11 +297,10 @@ export default class CountryPicker extends Component {
 
     this.setState({
       filter: value,
-      dataSource: ds.cloneWithRows(filteredCountries)
     })
   }
 
-  renderCountry(country, index) {
+  renderCountry = (country, index) => {
     return (
       <TouchableOpacity
         key={index}
@@ -321,12 +333,12 @@ export default class CountryPicker extends Component {
     return (
       <View style={styles.itemCountry}>
         {CountryPicker.renderFlag(cca2)}
-        <View style={styles.itemCountryName}>
+        <View style={{...styles.itemCountryName, marginTop: isEmojiable? 6 : 0}}>
           <Text style={styles.countryName} allowFontScaling={false}>
             {this.getCountryName(country)}
             {this.props.showCallingCode &&
             country.callingCode &&
-            <Text>{` (+${country.callingCode})`}</Text>}
+            <Text style={{color: '#737373', fontSize: 14}}>{` (+${country.callingCode})`}</Text>}
           </Text>
         </View>
       </View>
@@ -371,14 +383,20 @@ export default class CountryPicker extends Component {
           {this.props.children ? (
             this.props.children
           ) : (
+            <View style={{flex:1 , flexDirection:'row', alignItems:'center', justifyContent:'center', marginLeft:4, }}>
             <View
-              style={[styles.touchFlag, { marginTop: isEmojiable ? 0 : 5 }]}
-            >
+              style={[styles.touchFlag, { marginTop: isEmojiable? 0 : 6,  }]}
+              >
               {CountryPicker.renderFlag(this.props.cca2,
                 styles.itemCountryFlag,
                 styles.emojiFlag,
                 styles.imgStyle)}
             </View>
+              {this.props.childrenWithFlag && <View >
+                {this.props.childrenWithFlag}
+              </View>}
+            </View>
+
           )}
         </TouchableOpacity>
         <Modal
@@ -389,12 +407,17 @@ export default class CountryPicker extends Component {
         >
           <View style={styles.root}>
             <View style={{...styles.contentContainer, opacity:0.9, backgroundColor: this.props.backgroundModalColor}}>
-              <ListView
+              <SectionList
                 keyboardShouldPersistTaps="always"
                 style={{backgroundColor: 'transparent'}}
                 ref={listView => (this._listView = listView)}
-                dataSource={this.state.dataSource}
-                renderRow={country => this.renderCountry(country)}
+                sections={[
+                  { title: this.props.recommendedSectionTitle, data: this.state.recommendedCountries},
+                  { title: this.props.restOfTheWorldTitle, data: this.state.countryList}
+                ]}
+                renderSectionHeader={({section: {title}}) => this.renderSectionHeader(title)}
+                renderSectionFooter={() => <View style={{marginTop: 10}}/>}
+                renderItem={({item, index}) => this.renderCountry(item, index)}
                 initialListSize={30}
                 pageSize={15}
                 onLayout={({ nativeEvent: { layout: { y: offset } } }) =>
