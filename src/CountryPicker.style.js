@@ -1,4 +1,4 @@
-import { StyleSheet, PixelRatio } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { getHeightPercent } from './ratio'
 
 export default StyleSheet.create({
@@ -33,7 +33,6 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     width: 25,
     height: 19,
-    borderWidth: 1 / PixelRatio.get(),
     borderColor: '#eee',
     opacity: 0.8
   },
@@ -43,16 +42,15 @@ export default StyleSheet.create({
     fontSize: 30,
     width: 30,
     height: 30,
-    borderWidth: 1 / PixelRatio.get(),
     borderColor: 'transparent',
     backgroundColor: 'transparent'
   },
   itemCountry: {
     flexDirection: 'row',
-    height: getHeightPercent(7),
+    height: 46,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: 5
+    paddingHorizontal: 6
   },
   itemCountryFlag: {
     justifyContent: 'center',
@@ -64,13 +62,10 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     width: '100%',
-    borderBottomWidth: 2 / PixelRatio.get(),
-    borderBottomColor: '#ccc',
     height: 22
-
   },
   countryName: {
-    fontSize: getHeightPercent(2.2)
+    fontSize: 20
   },
   countryCode: {
     textAlign: 'right'
@@ -104,5 +99,12 @@ export default StyleSheet.create({
     height: 24,
     width: 24,
     resizeMode: 'contain'
-  }
+  },
+  root: {
+    height:320,
+    borderRadius: 10,
+    borderColor: '#899FAF',
+    borderWidth: 3,
+    overflow: 'hidden',
+  },
 })
