@@ -5,11 +5,10 @@ export default StyleSheet.create({
   container: {},
   modalContainer: {
     backgroundColor: 'white',
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
     flex: 1,
-    flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'white'
   },
@@ -31,8 +30,8 @@ export default StyleSheet.create({
   },
   imgStyle: {
     resizeMode: 'contain',
-    width: 25,
-    height: 19,
+    width: 30,
+    height: 30,
     borderColor: '#eee',
     opacity: 0.8
   },
@@ -50,7 +49,6 @@ export default StyleSheet.create({
     height: 46,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingHorizontal: 6
   },
   itemCountryFlag: {
     justifyContent: 'center',
@@ -61,11 +59,13 @@ export default StyleSheet.create({
   itemCountryName: {
     justifyContent: 'space-between',
     flexDirection: 'row',
+    alignItems:'center',
     width: '100%',
-    height: 22
+    height: 46
   },
   countryName: {
-    fontSize: 20
+    fontSize: 20,
+    color: 'black',
   },
   countryCode: {
     textAlign: 'right'
@@ -101,10 +101,8 @@ export default StyleSheet.create({
     resizeMode: 'contain'
   },
   root: {
-    height:320,
+    height:getHeightPercent(70),
     borderRadius: 10,
-    borderColor: '#899FAF',
-    borderWidth: 3,
     overflow: 'hidden',
   },
 })
