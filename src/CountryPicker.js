@@ -81,6 +81,7 @@ export default class CountryPicker extends Component {
     renderFilter: PropTypes.func,
     showCallingCode: PropTypes.bool,
     filterOptions: PropTypes.object,
+    backgroundModalColor: PropTypes.string,
   }
 
   static defaultProps = {
@@ -90,7 +91,8 @@ export default class CountryPicker extends Component {
     filterPlaceholder: 'Filter',
     autoFocusFilter: true,
     transparent: true,
-    animationType: 'none'
+    animationType: 'none',
+    backgroundModalColor: 'white',
   }
 
   static renderEmojiFlag(cca2, emojiStyle) {
@@ -141,11 +143,6 @@ export default class CountryPicker extends Component {
     // Sort country list
     countryList = countryList
       .map(c => [c, this.getCountryName(countries[c])])
-      .sort((a, b) => {
-        if (a[1] < b[1]) return -1
-        if (a[1] > b[1]) return 1
-        return 0
-      })
       .map(c => c[0])
 
     this.state = {
@@ -385,19 +382,15 @@ export default class CountryPicker extends Component {
           )}
         </TouchableOpacity>
         <Modal
-          animationIn='slideInUp'
-          animationInTiming={500}
           visible={this.state.modalVisible}
-          useNativeDriver
           onRequestClose={() => this.setState({ modalVisible: false })}
           onBackButtonPress={() => this.setState({ modalVisible: false })}
           onBackdropPress={() => this.setState({ modalVisible: false })}
         >
           <View style={styles.root}>
-            <View style={{...styles.contentContainer, opacity:0.9, backgroundColor:'#B9DFFF'}}>
+            <View style={{...styles.contentContainer, opacity:0.9, backgroundColor: this.props.backgroundModalColor}}>
               <ListView
                 keyboardShouldPersistTaps="always"
-                enableEmptySections
                 style={{backgroundColor: 'transparent'}}
                 ref={listView => (this._listView = listView)}
                 dataSource={this.state.dataSource}
@@ -419,8 +412,8 @@ export default class CountryPicker extends Component {
                     )}
                 </ScrollView>
                 )}
-              </View>
             </View>
+          </View>
         </Modal>
       </View>
     )
