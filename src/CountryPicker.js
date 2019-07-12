@@ -409,6 +409,8 @@ export default class CountryPicker extends Component {
             <View style={{...styles.contentContainer, opacity:0.9, backgroundColor: this.props.backgroundModalColor}}>
               <SectionList
                 keyboardShouldPersistTaps="always"
+                removeClippedSubviews
+                stickySectionHeadersEnabled={true}
                 style={{backgroundColor: 'transparent'}}
                 ref={listView => (this._listView = listView)}
                 sections={[
