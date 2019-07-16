@@ -23,7 +23,6 @@ import Fuse from 'fuse.js'
 import cca2List from '../data/cca2.json'
 import { getHeightPercent } from './ratio'
 import countryPickerStyles from './CountryPicker.style'
-import uuid from 'uuid';
 
 let countries = null
 let Emoji = null
@@ -54,7 +53,7 @@ const setCountries = flagType => {
 setCountries()
 
 export const getAllCountries = () =>
-cca2List.map(cca2 => ({ ...countries[cca2], cca2 }))
+  cca2List.map(cca2 => ({ ...countries[cca2], cca2 }))
 
 export default class CountryPicker extends Component {
   static propTypes = {
@@ -101,15 +100,6 @@ export default class CountryPicker extends Component {
     restOfTheWorldTitle: 'ME DE UM TITUTLO TBEM',
   }
 
-  static keyExtractor(item) {
-    if (item.id)
-      return String(item.id);
-    if (item.key)
-      return item.key;
-
-    return uuid.v4();
-  }
-
   static renderEmojiFlag(cca2, emojiStyle) {
     return (
       <Text style={[countryPickerStyles.emojiFlag, emojiStyle]} allowFontScaling={false}>
@@ -122,10 +112,14 @@ export default class CountryPicker extends Component {
 
   renderSectionHeader = (item) =>{
     return(
-      <View style={{marginBottom: 10, backgroundColor: 'white', height: 60, alignItems: 'center', justifyContent: 'center', opacity:1}}>
+      <View style={{marginBottom: 10, backgroundColor: 'white', height: 60, alignItems: 'center', justifyContent: 'center'}}>
         <Text style={{textAlign: 'center',fontSize: 26, fontWeight:'bold', color: '#008AFF' }}>{item}</Text>
       </View>
     );
+  }
+
+  static keyExtractor = (item) => {
+    return item;
   }
 
   static renderImageFlag(cca2, imageStyle) {
@@ -416,7 +410,7 @@ export default class CountryPicker extends Component {
           onBackdropPress={() => this.setState({ modalVisible: false })}
         >
           <View style={styles.root}>
-            <View style={{...styles.contentContainer, opacity:0.9, backgroundColor: this.props.backgroundModalColor}}>
+            <View style={{...styles.contentContainer, backgroundColor: this.props.backgroundModalColor}}>
               <SectionList
                 keyboardShouldPersistTaps="always"
                 removeClippedSubviews
