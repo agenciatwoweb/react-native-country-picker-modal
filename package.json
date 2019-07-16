@@ -41,6 +41,7 @@
     "prop-types": "15.6.0",
     "react-native-modal": "^11.1.0",
     "react-native-safe-area-view": "^0.7.0",
+    "uuid": "^3.3.2",
     "world-countries": "1.8.0"
   },
   "devDependencies": {
