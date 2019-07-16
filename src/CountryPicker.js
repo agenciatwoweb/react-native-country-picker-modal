@@ -420,7 +420,7 @@ export default class CountryPicker extends Component {
               <SectionList
                 keyboardShouldPersistTaps="always"
                 removeClippedSubviews
-                keyExtractor={MyList.keyExtractor}
+                keyExtractor={CountryPicker.keyExtractor}
                 stickySectionHeadersEnabled={true}
                 style={{backgroundColor: 'transparent'}}
                 ref={listView => (this._listView = listView)}
