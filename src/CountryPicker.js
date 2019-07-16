@@ -23,6 +23,7 @@ import Fuse from 'fuse.js'
 import cca2List from '../data/cca2.json'
 import { getHeightPercent } from './ratio'
 import countryPickerStyles from './CountryPicker.style'
+import uuid from 'uuid';
 
 let countries = null
 let Emoji = null
@@ -53,7 +54,7 @@ const setCountries = flagType => {
 setCountries()
 
 export const getAllCountries = () =>
-  cca2List.map(cca2 => ({ ...countries[cca2], cca2 }))
+cca2List.map(cca2 => ({ ...countries[cca2], cca2 }))
 
 export default class CountryPicker extends Component {
   static propTypes = {
@@ -100,6 +101,15 @@ export default class CountryPicker extends Component {
     restOfTheWorldTitle: 'ME DE UM TITUTLO TBEM',
   }
 
+  static keyExtractor(item) {
+    if (item.id)
+      return String(item.id);
+    if (item.key)
+      return item.key;
+
+    return uuid.v4();
+  }
+
   static renderEmojiFlag(cca2, emojiStyle) {
     return (
       <Text style={[countryPickerStyles.emojiFlag, emojiStyle]} allowFontScaling={false}>
@@ -112,7 +122,7 @@ export default class CountryPicker extends Component {
 
   renderSectionHeader = (item) =>{
     return(
-      <View style={{marginBottom: 10, backgroundColor: 'white', height: 60, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{marginBottom: 10, backgroundColor: 'white', height: 60, alignItems: 'center', justifyContent: 'center', opacity:1}}>
         <Text style={{textAlign: 'center',fontSize: 26, fontWeight:'bold', color: '#008AFF' }}>{item}</Text>
       </View>
     );
@@ -410,6 +420,7 @@ export default class CountryPicker extends Component {
               <SectionList
                 keyboardShouldPersistTaps="always"
                 removeClippedSubviews
+                keyExtractor={MyList.keyExtractor}
                 stickySectionHeadersEnabled={true}
                 style={{backgroundColor: 'transparent'}}
                 ref={listView => (this._listView = listView)}
